@@ -1,0 +1,34 @@
+name: Windows
+on:
+  push:
+    branches:
+      - '*'
+    tags:
+      - '*'
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      name:
+        description: 'Manually trigger build of Idris 2.'
+        required: true
+env:
+  MSYSTEM: MINGW64
+  MSYS2_PATH_TYPE: inherit
+  SCHEME: scheme
+  CC: gcc
+  ACTIONS_ALLOW_UNSECURE_COMMANDS: true
+
+jobs:
+  build:
+    runs-on: windows-latest
+    steps:
+      - name: Init
+        run: |
+          git config --global core.autocrlf false
+      - name: Checkout
+        uses: actions/checkout@v2
+      - name: Run make command
+        run: |
+          cd src && make
